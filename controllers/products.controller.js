@@ -23,12 +23,25 @@ exports.getCart = (req, res, next) => {
     );
 };
 
-exports.getHomepage = (req, res, next) => {
+exports.getCheckout = (req, res, next) => {
     res.render(
-        'shop/index',
+        'shop/checkout',
         {
-            pageTitle: 'Homepage',
-            path: '/'
+            pageTitle: 'Checkout',
+            path: '/cart'
         }
     );
+};
+
+exports.getHomepage = (req, res, next) => {
+    Product.fetchAll(products => {
+        res.render(
+            'shop/index',
+            {
+                prods: products,
+                pageTitle: 'Homepage',
+                path: '/',
+            }
+        );
+    });
 };

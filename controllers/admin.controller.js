@@ -11,7 +11,12 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-    new Product( req.body.title ).save();
+    new Product(
+        req.body.title,
+        req.body.imageUrl,
+        req.body.description,
+        req.body.price
+    ).save();
     res.redirect('/products');
 };
 

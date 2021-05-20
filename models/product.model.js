@@ -10,7 +10,7 @@ const p = path.join(
 const getProductsFromFile = (cb) => {
     const products = [];
     fs.readFile(p, (err, fileContent) => {
-        if (!err) {
+        if (!err && JSON.parse(fileContent).length > 0) {
             JSON.parse(fileContent).forEach(product => { products.push(product)} );
         }
         return cb(products);
@@ -18,9 +18,11 @@ const getProductsFromFile = (cb) => {
 };
 
 module.exports = class Product {
-
-    constructor(title) {
+    constructor(title, imageUrl, description, price) {
         this.title = title;
+        this.imageUrl = imageUrl;
+        this.description = description;
+        this.price = price;
     }
 
     save() {
