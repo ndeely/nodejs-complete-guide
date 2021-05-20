@@ -13,12 +13,40 @@ exports.getProducts = (req, res, next) => {
     });
 };
 
+exports.getProduct = (req, res, next) => {
+    const id = req.params.id;
+    Product.findById(id, product => {
+        res.render(
+            'shop/product-detail',
+            {
+                pageTitle: product.title,
+                path: '/products',
+                product: product
+            }
+        );
+    });
+};
+
 exports.getCart = (req, res, next) => {
     res.render(
         'shop/cart',
         {
             pageTitle: 'Cart',
             path: '/cart'
+        }
+    );
+};
+
+exports.postCart = (req, res, next) => {
+    const prodId = req.body.productId;
+};
+
+exports.getOrders = (req, res, next) => {
+    res.render(
+        'shop/orders',
+        {
+            pageTitle: 'Orders',
+            path: '/orders'
         }
     );
 };
