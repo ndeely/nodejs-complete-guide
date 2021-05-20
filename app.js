@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 
-const errorController = require('./controllers/error');
+const errorController = require('./controllers/error.controller');
 
 const app = express();
 

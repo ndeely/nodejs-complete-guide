@@ -1,8 +1,8 @@
-<%- include('includes/head.ejs') %>
-<%- include('includes/nav.ejs') %>
+<%- include('../includes/head.ejs') %>
+<%- include('../includes/nav.ejs') %>
 
 <main>
-    <h1>My Products</h1>
+    <h1><%= pageTitle %></h1>
     <% if (prods.length < 1) { %>
         <p>No products to display.</p>
     <% } else { %>
@@ -12,4 +12,4 @@
     <% } %>
 </main>
 
-<%- include('includes/end.ejs') %>
+<%- include('../includes/end.ejs') %>
