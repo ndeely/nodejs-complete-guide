@@ -13,6 +13,7 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
     new Product(
+        null,
         req.body.title,
         req.body.imageUrl,
         req.body.description,
@@ -41,7 +42,18 @@ exports.getEditProduct = (req, res, next) => {
             }
         );
     });
+};
 
+exports.postEditProduct = (req, res, next) => {
+    const prodId = req.body.productId;
+    new Product(
+        prodId,
+        req.body.title,
+        req.body.imageUrl,
+        req.body.description,
+        req.body.price
+    ).save();
+    res.redirect('/admin/products');
 };
 
 exports.getProducts = (req, res, next) => {
