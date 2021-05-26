@@ -1,30 +1,42 @@
 const Product = require('../models/product.model');
 const Cart = require('../models/cart.model');
 
+exports.getHomepage = (req, res, next) => {
+    Product.findAll()
+        .then(products => {
+            res.render(
+                'shop/index', {
+                    prods: products,
+                    pageTitle: 'Homepage',
+                    path: '/'
+                }
+            );
+        })
+        .catch(err => { if (err) console.log(err); });
+};
+
 exports.getProducts = (req, res, next) => {
-    Product.fetchAll()
-        .then(([rows, fieldData]) => {
+    Product.findAll()
+        .then(products => {
             res.render(
                 'shop/product-list', {
-                    prods: rows,
+                    prods: products,
                     pageTitle: 'Shop',
                     path: '/products'
                 }
             );
         })
-        .catch(err => {
-            if (err) console.log(err);
-        });
+        .catch(err => { if (err) console.log(err); });
 };
 
 exports.getProduct = (req, res, next) => {
     const id = req.params.id;
-    Product.findById(id)
-        .then(([rows, fieldData]) => {
+    Product.findByPk(id)
+        .then(product => {
             res.render(
                 'shop/product-detail', {
-                    product: rows[0],
-                    pageTitle: rows[0].title,
+                    product: product,
+                    pageTitle: product.title,
                     path: '/products'
                 }
             );
@@ -35,37 +47,55 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-    Cart.getCart(cart => {
-        Product.fetchAll(products => {
-            const cartProducts = [];
-           for(let product of products) {
-               const cartProductData = cart.products.find(prod => prod.id === product.id);
-               if (cartProductData) {
-                   cartProducts.push({ productData: product, qty: cartProductData.qty });
-               }
-           }
-            res.render(
-                'shop/cart',
-                {
-                    pageTitle: 'Cart',
-                    path: '/cart',
-                    products: cartProducts
-                }
-            );
-        });
-    });
+    req.user
+        .getCart()
+        .then(cart => {
+            return cart
+                .getProducts()
+                .then(products => {
+                    res.render('shop/cart', {
+                       path: '/cart',
+                       pageTitle: 'Your Cart',
+                       products: products
+                    });
+                })
+                .catch(err => { if (err) console.log(err) });;
+        })
+        .catch(err => { if (err) console.log(err) });
 };
 
 exports.postCart = (req, res, next) => {
     const prodId = req.body.productId;
-    Product.findById(prodId)
-        .then(([rows, fieldData]) => {
-            Cart.addProduct(prodId, rows[0].price);
+    let fetchedCart;
+    let newQuantity = 1;
+    req.user
+        .getCart()
+        .then(cart => {
+            fetchedCart = cart;
+            return cart.getProducts({ where: { id: prodId } });
+        })
+        .then(products => {
+            let product;
+            if (products.length > 0) {
+                product = products[0];
+            }
+
+            if (product) {
+                const oldQuantity = product.cartitem.quantity;
+                newQuantity = oldQuantity + 1;
+                return product;
+            }
+            return Product.findByPk(prodId);
+        })
+        .then(product => {
+            return fetchedCart.addProduct(product, {
+                through: { quantity: newQuantity }
+            });
+        })
+        .then(() => {
             res.redirect('/cart');
         })
-        .catch(err => {
-            if (err) console.log(err);
-        });
+        .catch(err => { if (err) console.log(err) });
 };
 
 exports.deleteCartItem = (req, res, next) => {
@@ -98,20 +128,4 @@ exports.getCheckout = (req, res, next) => {
             path: '/cart'
         }
     );
-};
-
-exports.getHomepage = (req, res, next) => {
-    Product.fetchAll()
-        .then(([rows, fieldData]) => {
-            res.render(
-              'shop/index', {
-                    prods: rows,
-                    pageTitle: 'Homepage',
-                    path: '/'
-                }
-            );
-        })
-        .catch(err => {
-        if (err) console.log(err);
-    });
 };

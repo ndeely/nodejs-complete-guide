@@ -3,15 +3,15 @@
 
 <main>
     <h1><%= pageTitle %></h1>
-    <% if (products.length < 0) { %>
+    <% if (products.length < 1) { %>
     <h1>No products in cart!</h1>
     <% } else { %>
         <ul>
             <% products.forEach( p => { %>
                 <li>
-                    <p><%= p.productData.title %> (<%= p.qty %>)</p>
+                    <p><%= p.title %> (<%= p.cartitem.quantity %>)</p>
                     <form action="/cart-delete-item" method="POST">
-                        <input type="hidden" value="<%= p.productData.id %>" name="productId">
+                        <input type="hidden" value="<%= p.id %>" name="productId">
                         <button class="btn" type="submit">Delete</button>
                     </form>
                 </li>
