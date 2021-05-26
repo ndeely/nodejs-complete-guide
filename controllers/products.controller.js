@@ -100,14 +100,19 @@ exports.postCart = (req, res, next) => {
 
 exports.deleteCartItem = (req, res, next) => {
     const prodId = req.body.productId;
-    Product.findById(prodId)
-        .then(([rows, fieldData]) => {
-            Cart.deleteProduct(rows[0].id, rows[0].price);
+    req.user
+        .getCart()
+        .then(cart => {
+            return cart.getProducts({ where: { id: prodId } });
+        })
+        .then(products => {
+            const product = products[0];
+            return product.cartitem.destroy();
+        })
+        .then(result => {
             res.redirect('/cart');
         })
-        .catch(err => {
-            if (err) console.log(err);
-        });
+        .catch(err => { if (err) console.log(err) });
 }
 
 exports.getOrders = (req, res, next) => {
