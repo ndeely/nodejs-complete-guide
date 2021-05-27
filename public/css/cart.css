@@ -1,0 +1,13 @@
+ul {
+    list-style-type: none;
+}
+
+button.danger {
+    color: red;
+    border: 1px solid red;
+}
+
+button.danger:hover, button.danger:active {
+    color: #FFF;
+    background-color: red;
+}
