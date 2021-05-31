@@ -12,17 +12,17 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-    req.user
-        .createProduct({
-            title: req.body.title,
-            price: req.body.price,
-            description: req.body.description,
-            imageUrl: req.body.imageUrl
-        })
+    const product = new Product(
+        req.body.title,
+        req.body.price,
+        req.body.description,
+        req.body.imageUrl
+    );
+    product.save()
         .then(() => {
             res.redirect('/admin/products');
         })
-        .catch( err => { if (err) console.log(err); } );
+        .catch(err => { if (err) console.log(err); });
 };
 
 exports.getEditProduct = (req, res, next) => {
