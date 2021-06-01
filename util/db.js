@@ -5,7 +5,7 @@ let _db;
 
 const mongoConnect = cb => {
    MongoClient
-       .connect('mongodb+srv://niall:NHO4Ziki87@cluster0.eivhf.mongodb.net/node?retryWrites=true&w=majority', { useUnifiedTopology: true} )
+       .connect('mongodb+srv://niall:NHO4Ziki87@cluster1.eivhf.mongodb.net/node?retryWrites=true&w=majority', { useUnifiedTopology: true} )
        .then(client => {
           _db = client.db();
           cb();
