@@ -2,7 +2,7 @@ const Product = require('../models/product.model');
 // const Cart = require('../models/cart.model');
 
 exports.getHomepage = (req, res, next) => {
-    Product.fetchAll()
+    Product.find()
         .then(products => {
             res.render(
                 'shop/index', {
@@ -16,7 +16,7 @@ exports.getHomepage = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-    Product.fetchAll()
+    Product.find()
         .then(products => {
             res.render(
                 'shop/product-list', {
@@ -83,7 +83,6 @@ exports.deleteCartItem = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-    let fetchedCart;
     req.user
         .addOrder()
         .then(() => {

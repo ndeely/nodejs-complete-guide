@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
     User.findById('60b6588029fb11f22962f4df')
         .then(user => {
-            req.user = new User(user.name, user.email, user.password, user.cart, user._id);
+            req.user = user;
             next();
         })
         .catch(err => { if (err) console.log(err) } );
@@ -33,8 +33,20 @@ app.use('/admin', adminRoutes);
 app.use(errorController.error404);
 
 mongoose
-    .connect('mongodb+srv://niall:NHO4Ziki87@cluster1.eivhf.mongodb.net/node?retryWrites=true&w=majority')
+    .connect(
+        'mongodb+srv://niall:NHO4Ziki87@cluster1.eivhf.mongodb.net/node?retryWrites=true&w=majority',
+        { useNewUrlParser: true, useUnifiedTopology: true }
+    )
     .then(() => {
+        User.findOne().then(user => {
+            if (!user) {
+                const user = new User({
+                    name: 'Niall',
+                    email: 'nialldeely@gmail.com',
+                    cart: []
+                });
+            }
+        });
         app.listen(4200);
     })
     .catch(err => { if (err) console.log(err) });

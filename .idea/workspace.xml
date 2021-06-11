@@ -4,8 +4,10 @@
     <list default="true" id="17ab3608-8f05-4acc-a61a-18ea54f25bcb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/admin.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/admin.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/shop.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/shop.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/product.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/product.model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.model.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +75,7 @@
       <workItem from="1622113985319" duration="10584000" />
       <workItem from="1622555656540" duration="15124000" />
       <workItem from="1623150184199" duration="24000" />
-      <workItem from="1623327411809" duration="8873000" />
+      <workItem from="1623327411809" duration="13214000" />
     </task>
     <servers />
   </component>
