@@ -8,7 +8,7 @@ const userSchema = new Schema({
         required: true
     },
     email: {
-        type: Number,
+        type: String,
         required: true
     },
     cart: {
@@ -27,6 +27,42 @@ const userSchema = new Schema({
         ]
     }
 });
+
+userSchema.methods.addToCart = function(product) {
+    // find index of product in cart
+    const cartProductIndex = this.cart.items.findIndex(cp => {
+        return cp.productId.toString() === product._id.toString();
+    });
+    let newQuantity = 1;
+    const updatedCartItems = [...this.cart.items];
+
+    if (cartProductIndex >= 0) { // this item is in the cart
+        newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+        updatedCartItems[cartProductIndex].quantity = newQuantity;
+    } else {
+        updatedCartItems.push(
+            { productId: product._id, quantity: newQuantity }
+        );
+    }
+    const updatedCart = {
+        items: updatedCartItems
+    };
+    this.cart = updatedCart;
+    this.save();
+};
+
+userSchema.methods.deleteFromCart = function(prodId) {
+    const updatedCartItems = this.cart.items.filter(i => {
+        return i._id.toString() !== prodId.toString();
+    });
+    this.cart.items = updatedCartItems;
+    this.save();
+};
+
+userSchema.methods.clearCart = function() {
+    this.cart = {items: []};
+    this.save();
+};
 
 module.exports = mongoose.model('User', userSchema);
 
