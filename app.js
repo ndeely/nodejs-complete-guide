@@ -2,6 +2,8 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
+
+// mongodb and session modules
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
@@ -57,15 +59,6 @@ mongoose
         { useNewUrlParser: true, useUnifiedTopology: true }
     )
     .then(() => {
-        User.findOne().then(user => {
-            if (!user) {
-                const user = new User({
-                    name: 'Niall',
-                    email: 'nialldeely@gmail.com',
-                    cart: []
-                });
-            }
-        });
         app.listen(4200);
     })
     .catch(err => { if (err) console.log(err) });

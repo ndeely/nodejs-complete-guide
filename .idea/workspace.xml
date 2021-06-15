@@ -2,13 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="17ab3608-8f05-4acc-a61a-18ea54f25bcb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/middleware/is-auth.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/views/auth/signup.ejs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/auth.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/auth.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.model.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/admin.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/auth.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/includes/add-to-cart-button.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/includes/add-to-cart-button.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/shop.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/includes/nav.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/includes/nav.ejs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,6 +51,7 @@
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="javascript.nodejs.core.library.configured.version" value="14.16.1" />
+    <property name="jdk.selected.JAVA_MODULE" value="1.8" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../1 - Personal Web Page/wp" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -82,7 +87,9 @@
       <workItem from="1623660055423" duration="2934000" />
       <workItem from="1623674949782" duration="615000" />
       <workItem from="1623681583112" duration="7159000" />
-      <workItem from="1623751227101" duration="378000" />
+      <workItem from="1623751227101" duration="1106000" />
+      <workItem from="1623753590356" duration="279000" />
+      <workItem from="1623754440022" duration="5288000" />
     </task>
     <servers />
   </component>
@@ -106,13 +113,17 @@
     </state>
     <state x="184" y="6" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1619110634803" />
     <state x="207" y="7" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1621334403535" />
+    <state x="418" y="33" key="new project wizard" timestamp="1623764277226">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="418" y="33" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1623764277226" />
     <state x="809" y="190" key="run.anything.popup" timestamp="1623427229858">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="809" y="190" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1623427229858" />
-    <state x="814" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1623682834214">
+    <state x="814" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1623755348409">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="814" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1623682834214" />
+    <state x="814" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1623755348409" />
   </component>
 </project>
