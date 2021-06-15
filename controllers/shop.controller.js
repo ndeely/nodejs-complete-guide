@@ -8,8 +8,7 @@ exports.getHomepage = (req, res, next) => {
                 'shop/index', {
                     prods: products,
                     pageTitle: 'Homepage',
-                    path: '/',
-                    isAuthenticated: req.session.isLoggedIn
+                    path: '/'
                 }
             );
         })
@@ -23,8 +22,7 @@ exports.getProducts = (req, res, next) => {
                 'shop/product-list', {
                     prods: products,
                     pageTitle: 'Shop',
-                    path: '/products',
-                    isAuthenticated: req.session.isLoggedIn
+                    path: '/products'
                 }
             );
         })
@@ -39,8 +37,7 @@ exports.getProduct = (req, res, next) => {
                 'shop/product-detail', {
                     product: product,
                     pageTitle: product.title,
-                    path: '/products',
-                    isAuthenticated: req.session.isLoggedIn
+                    path: '/products'
                 }
             );
         })
@@ -57,8 +54,7 @@ exports.getCart = (req, res, next) => {
         res.render('shop/cart', {
             path: '/cart',
             pageTitle: 'Your Cart',
-            products: user.cart.items,
-            isAuthenticated: req.session.isLoggedIn
+            products: user.cart.items
         });
     })
     .catch(err => { if (err) console.log(err) });
@@ -95,7 +91,7 @@ exports.postOrder = (req, res, next) => {
             });
             const order = new Order({
                 user: {
-                    name: req.user.name,
+                    email: req.user.email,
                     userId: req.user._id
                 },
                 products: products
@@ -120,8 +116,7 @@ exports.getOrders = (req, res, next) => {
                 {
                     pageTitle: 'Orders',
                     path: '/orders',
-                    orders: orders,
-                    isAuthenticated: req.session.isLoggedIn
+                    orders: orders
                 }
             );
         })

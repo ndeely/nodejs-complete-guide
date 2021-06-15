@@ -98,16 +98,20 @@ form {
     padding: 0;
 }
 
-.mobile-nav__item a {
+.mobile-nav__item a,
+.mobile-nav__item .btn {
     text-decoration: none;
     color: black;
     font-size: 1.5rem;
     padding: 0.5rem 2rem;
+    border: none;
 }
 
 .mobile-nav__item a:active,
 .mobile-nav__item a:hover,
-.mobile-nav__item a.active {
+.mobile-nav__item a.active,
+.mobile-nav__item .btn:hover,
+.mobile-nav__item .btn:active {
     background: #00695c;
     color: white;
     border-radius: 3px;
@@ -198,9 +202,15 @@ form {
 }
 
 .btn:hover,
-.btn:active {
+.btn:active,
+.main-header__item .btn {
     background-color: #00695c;
     color: white;
+}
+
+.main-header__item .btn:hover,
+.main-header__item .btn:active {
+    color: #ffeb3b;
 }
 
 @media (min-width: 768px) {
@@ -209,6 +219,12 @@ form {
     }
 
     #side-menu-toggle {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header__nav {
         display: none;
     }
 }
