@@ -213,6 +213,22 @@ form {
     color: #ffeb3b;
 }
 
+.alert {
+    margin: auto;
+    width: 90%;
+    border: 1px solid #4771fa;
+    background: #b9c9ff;
+    padding: 1rem;
+    border-radius: 3px;
+    text-align: center;
+}
+
+.alert-danger {
+    border-color: red;
+    background: #ff8a59;
+    color: red;
+}
+
 @media (min-width: 768px) {
     .main-header__nav {
         display: flex;

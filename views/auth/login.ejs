@@ -3,6 +3,9 @@
 <%- include('../includes/nav.ejs') %>
 
 <main>
+    <% if (errorMessage) { %>
+        <div class="alert alert-danger"><%= errorMessage %></div>
+    <% } %>
     <h1><%= pageTitle %></h1>
     <form action="/login" class="login-form" method="POST">
         <div class="form-control">

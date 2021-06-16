@@ -2,6 +2,7 @@ const User = require('../models/user.model');
 const bcrypt = require('bcryptjs'); // password encryption module
 
 exports.getLogin = (req, res, next) => {
+    const errorMessage = req.flash('error');
     if (req.session.isLoggedIn) {
         return res.redirect('/');
     }
@@ -9,7 +10,8 @@ exports.getLogin = (req, res, next) => {
         'auth/login',
         {
             pageTitle: 'Login',
-            path: '/login'
+            path: '/login',
+            errorMessage: errorMessage.length > 0 ? errorMessage[0] : null
         }
     );
 };
@@ -22,12 +24,14 @@ exports.postLogin = (req, res, next) => {
         .then(user => {
             if (!user) {
                 // incorrect email
+                req.flash('error', 'Invalid login.');
                 return res.redirect('/login');
             }
             bcrypt.compare(password, user.password)
                 .then(isMatch => {
                     if (!isMatch) {
                         // incorrect password
+                        req.flash('error', 'Invalid login.');
                         return res.redirect('/login');
                     }
                     req.session.isLoggedIn = true;
@@ -38,25 +42,27 @@ exports.postLogin = (req, res, next) => {
                             res.redirect('/');
                         });
                 })
-                .catch(err => { console.log(err) });
+                .catch(err => { if (err) console.log(err) });
         })
-        .catch(err => { console.log(err) });
+        .catch(err => { if (err) console.log(err) });
 };
 
 exports.postLogout = (req, res, next) => {
     req.session.destroy(err => {
-        console.log(err);
+        if(err) { console.log(err); }
         res.redirect('/login');
         }
     );
 };
 
 exports.getSignup = (req, res, next) => {
+    const errorMessage = req.flash('error');
     res.render(
         'auth/signup',
         {
             pageTitle: 'Sign Up',
-            path: '/signup'
+            path: '/signup',
+            errorMessage: errorMessage.length > 0 ? errorMessage[0] : null
         }
     );
 };
@@ -67,14 +73,14 @@ exports.postSignup = (req, res, next) => {
     const confirmPassword = req.body.confirmPassword;
     if (password.toString() !== confirmPassword.toString()) {
         // passwords do not match
-        console.log("Passwords do not match!");
+        req.flash('error', 'Passwords do not match!');
         return res.redirect('/signup');
     }
     User.findOne({email: email})
         .then(userDoc => {
             if (userDoc) {
                 // user email already exists
-                console.log("Email already exists!");
+                req.flash('error', 'This email is already in use.');
                 return res.redirect('/signup');
             }
             return bcrypt.hash(password, 12)
@@ -89,5 +95,5 @@ exports.postSignup = (req, res, next) => {
         .then(() => {
             res.redirect('/login');
         })
-        .catch(err => { console.log(err) });
+        .catch(err => { if (err) console.log(err) });
 };
