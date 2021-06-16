@@ -1,5 +1,14 @@
-const User = require('../models/user.model');
 const bcrypt = require('bcryptjs'); // password encryption module
+const nodemailer = require('nodemailer');
+const sengridTransport = require('nodemailer-sendgrid-transport');
+
+const User = require('../models/user.model');
+
+const transporter = nodemailer.createTransport(sengridTransport({
+    auth: {
+        api_key: process.env.SENDGRID_API_KEY
+    }
+}));
 
 exports.getLogin = (req, res, next) => {
     const errorMessage = req.flash('error');
@@ -38,7 +47,7 @@ exports.postLogin = (req, res, next) => {
                     req.session.user = user;
                     req.session
                         .save(err => {
-                            console.log(err);
+                            if (err) { console.log(err); }
                             res.redirect('/');
                         });
                 })
@@ -94,6 +103,12 @@ exports.postSignup = (req, res, next) => {
         })
         .then(() => {
             res.redirect('/login');
+            return transporter.sendMail({
+                to: email,
+                from: 'noreply@nialldeely.com',
+                subject: 'Welcome to my Shop',
+                html: '<h1>You successfully registered!</h1>'
+            });
         })
         .catch(err => { if (err) console.log(err) });
 };

@@ -8,15 +8,15 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
-const flash = require('connect-flash');
+const flash = require('connect-flash'); // for error/info messages to user
+require('dotenv').config();
 
 const errorController = require('./controllers/error.controller');
 const User = require('./models/user.model');
-const MONGODB_URI = 'mongodb+srv://niall:NHO4Ziki87@cluster1.eivhf.mongodb.net/node?w=majority';
 
 const app = express();
 const store = new MongoDBStore({
-    uri: MONGODB_URI,
+    uri: process.env.MONGODB_URI,
     collection: 'sessions'
 });
 const csrfProtection = csrf({});
@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(
     session({
-        secret: 'someValue55!eim;1',
+        secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         store: store
@@ -66,7 +66,7 @@ app.use(errorController.error404);
 
 mongoose
     .connect(
-        MONGODB_URI,
+        process.env.MONGODB_URI,
         { useNewUrlParser: true, useUnifiedTopology: true }
     )
     .then(() => {
