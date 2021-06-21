@@ -4,10 +4,12 @@
 
 <main>
     <% if (errorMessage) { %>
-        <div class="alert alert-danger"><%= errorMessage %></div>
+        <% for(const error of errorMessage) { %>
+            <div class="alert alert-danger"><%= error.msg %></div>
+        <% } %>
     <% } %>
     <h1><%= pageTitle %></h1>
-    <form action="/signup" class="login-form" method="POST">
+    <form action="/signup" class="login-form" method="POST" novalidate>
         <div class="form-control">
             <label for="email">Email</label>
             <input type="email" name="email" id="email">

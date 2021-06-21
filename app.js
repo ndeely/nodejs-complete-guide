@@ -23,9 +23,9 @@ const csrfProtection = csrf({});
 
 app.set('view engine', ejs.name);
 
-const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
-const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin.routes');
+const shopRoutes = require('./routes/shop.routes');
+const authRoutes = require('./routes/auth.routes');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
