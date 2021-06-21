@@ -1,3 +1,5 @@
+const crypto = require('crypto'); // built-in node module
+
 const bcrypt = require('bcryptjs'); // password encryption module
 const nodemailer = require('nodemailer');
 const sengridTransport = require('nodemailer-sendgrid-transport');
@@ -111,4 +113,54 @@ exports.postSignup = (req, res, next) => {
             });
         })
         .catch(err => { if (err) console.log(err) });
+};
+
+exports.getResetPassword = (req, res, next) => {
+    const errorMessage = req.flash('error');
+    res.render(
+        'auth/reset-password',
+        {
+            pageTitle: 'Reset Password',
+            path: '/reset-password',
+            errorMessage: errorMessage.length > 0 ? errorMessage[0] : null
+        }
+    );
+};
+
+exports.postResetPassword = (req, res, next) => {
+    crypto.randomBytes(32, (err, buffer) => {
+       if (err) {
+           console.log(err);
+           return res.redirect('/reset-password');
+       }
+       const token = buffer.toString('hex');
+        const email = req.body.email;
+
+        User.findOne({email: email})
+            .then(user => {
+                if (!user) {
+                    // user email doesn't exists
+                    req.flash('error', 'This email is not in use.');
+                    return res.redirect('/reset-password');
+                }
+                user.resetToken = token;
+                user.resetTokenExpiration = Date.now() + 3600000; // resets in 1h
+                return user.save;
+            })
+            .then(() => {
+                res.redirect('/');
+                transporter.sendMail({
+                    to: email,
+                    from: 'noreply@nialldeely.com',
+                    subject: 'Password Reset',
+                    html: `
+                    <p>You have requested a password reset.</p>
+                    <p>Please click the link below to set a new password. 
+                    This link will expire in 1 hour.</p>
+                    <p><a href="${process.env.PASSWORD_RESET_URI}${token}">Reset Password</a></p>
+                `
+                });
+            })
+            .catch(err => { if (err) console.log(err) });
+    });
 };
