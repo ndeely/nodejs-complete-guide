@@ -1,5 +1,5 @@
 const express = require('express');
-const { body, check } = require('express-validator');
+const { body } = require('express-validator');
 
 const authController = require('../controllers/auth.controller');
 const isAuth = require('../middleware/is-auth');
@@ -9,9 +9,14 @@ const router = express.Router();
 const User = require('../models/user.model');
 
 router.get('/login', authController.getLogin);
-router.post('/login',
+router.post(
+    '/login',
     [
-        body('email', 'Invalid Email Address').exists().isEmail().trim().escape()
+        body('email')
+            .exists()
+            .isEmail()
+            .trim()
+            .escape()
             .custom(email => {
                 return new Promise((resolve, reject) => {
                     User.findOne({ email: email })
@@ -29,9 +34,15 @@ router.post('/login',
     authController.postLogin);
 router.post('/logout', isAuth, authController.postLogout);
 router.get('/signup', authController.getSignup);
-router.post('/signup',
+router.post(
+    '/signup',
     [
-        body('email', 'Invalid Email Address').exists().isEmail().trim().escape()
+        body('email', 'Invalid Email Address')
+            .exists()
+            .isEmail()
+            .trim()
+            .normalizeEmail()
+            .escape()
             .custom(email => {
                 return new Promise((resolve, reject) => {
                     User.findOne({ email: email })
