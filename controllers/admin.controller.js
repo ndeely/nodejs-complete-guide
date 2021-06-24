@@ -27,7 +27,7 @@ exports.postAddProduct = (req, res, next) => {
                 hasError: true,
                 oldInput: {
                     title: req.body.title,
-                    imageUrl: req.body.imageUrl,
+                    image: req.body.image,
                     price: req.body.price,
                     description: req.body.description
                 },
@@ -40,7 +40,7 @@ exports.postAddProduct = (req, res, next) => {
         title: req.body.title,
         price: req.body.price,
         description: req.body.description,
-        imageUrl: req.body.imageUrl,
+        image: req.body.image,
         userId: req.user._id
     });
     product.save()
@@ -75,7 +75,7 @@ exports.getEditProduct = (req, res, next) => {
                     product: product,
                     oldInput: {
                         title: product.title,
-                        imageUrl: product.imageUrl,
+                        image: product.image,
                         price: product.price,
                         description: product.description
                     },
@@ -110,7 +110,7 @@ exports.postEditProduct = (req, res, next) => {
                         product: product,
                         oldInput: {
                             title: req.body.title,
-                            imageUrl: req.body.imageUrl,
+                            image: req.body.image,
                             price: req.body.price,
                             description: req.body.description
                         },
@@ -133,7 +133,7 @@ exports.postEditProduct = (req, res, next) => {
             product.title = req.body.title;
             product.price = req.body.price;
             product.description = req.body.description;
-            product.imageUrl = req.body.imageUrl;
+            product.image = req.body.image;
             return product
                 .save()
                 .then(() => {
