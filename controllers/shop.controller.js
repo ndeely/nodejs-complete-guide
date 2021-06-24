@@ -12,7 +12,11 @@ exports.getHomepage = (req, res, next) => {
                 }
             );
         })
-        .catch(err => { if (err) console.log(err); });
+        .catch(err => { if (err) {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        } });
 };
 
 exports.getProducts = (req, res, next) => {
@@ -26,7 +30,11 @@ exports.getProducts = (req, res, next) => {
                 }
             );
         })
-        .catch(err => { if (err) console.log(err); });
+        .catch(err => { if (err) {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        } });
 };
 
 exports.getProduct = (req, res, next) => {
