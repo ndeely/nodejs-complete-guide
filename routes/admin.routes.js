@@ -15,7 +15,6 @@ router.post(
           .isString().withMessage("Title must be a valid string of text")
           .isLength({min: 3}).withMessage("Title must be at least 3 characters long")
           .trim(),
-        body('image'),
         body('price')
             .isFloat().withMessage("Price must be a valid decimal (i.e. 5.99"),
         body('description')

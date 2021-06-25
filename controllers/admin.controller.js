@@ -9,14 +9,42 @@ exports.getAddProduct = (req, res, next) => {
             path: '/admin/add-product',
             editing: false,
             hasError: false,
+            errorMessage: null,
             validationErrors: []
         }
     );
 };
 
 exports.postAddProduct = (req, res, next) => {
+    const title = req.body.title;
+    const image = req.file;
+    console.log(image);
+    const price = req.body.price;
+    const description = req.body.description;
+
     const errors = validationResult(req);
 
+    // the image was not the correct filetype
+    if (!image) {
+        return res.status(422).render(
+            'admin/edit-product',
+            {
+                pageTitle: 'Add Product',
+                path: '/admin/add-product',
+                editing: false,
+                hasError: true,
+                oldInput: {
+                    title: title,
+                    price: price,
+                    description: description
+                },
+                errorMessage: "Attached file is not an image",
+                validationErrors: errors.array()
+            }
+        );
+    }
+
+    // there were other validation errors
     if (!errors.isEmpty()) {
         return res.status(422).render(
             'admin/edit-product',
@@ -26,21 +54,21 @@ exports.postAddProduct = (req, res, next) => {
                 editing: false,
                 hasError: true,
                 oldInput: {
-                    title: req.body.title,
-                    image: req.body.image,
-                    price: req.body.price,
-                    description: req.body.description
+                    title: title,
+                    image: image,
+                    price: price,
+                    description: description
                 },
                 validationErrors: errors.array()
             }
         );
     }
-
+    const imageUrl = '/' + image.path;
     const product = new Product({
-        title: req.body.title,
-        price: req.body.price,
-        description: req.body.description,
-        image: req.body.image,
+        title: title,
+        imageUrl: imageUrl,
+        price: price,
+        description: description,
         userId: req.user._id
     });
     product.save()
@@ -75,7 +103,6 @@ exports.getEditProduct = (req, res, next) => {
                     product: product,
                     oldInput: {
                         title: product.title,
-                        image: product.image,
                         price: product.price,
                         description: product.description
                     },
@@ -92,15 +119,21 @@ exports.getEditProduct = (req, res, next) => {
 
 exports.postEditProduct = (req, res, next) => {
     const prodId = req.body.productId;
+    const title = req.body.title;
+    const image = req.file;
+    const price = req.body.price;
+    const description = req.body.description;
+
     const errors = validationResult(req);
 
+    // there were other validation errors
     if (!errors.isEmpty()) {
         return Product.findById(prodId)
             .then(product => {
                 if (!product) {
                     return res.redirect('/');
                 }
-                res.render(
+                res.status(422).render(
                     'admin/edit-product',
                     {
                         pageTitle: 'Edit Product',
@@ -109,10 +142,9 @@ exports.postEditProduct = (req, res, next) => {
                         hasError: true,
                         product: product,
                         oldInput: {
-                            title: req.body.title,
-                            image: req.body.image,
-                            price: req.body.price,
-                            description: req.body.description
+                            title: title,
+                            price: price,
+                            description: description
                         },
                         validationErrors: errors.array()
                     }
@@ -130,10 +162,10 @@ exports.postEditProduct = (req, res, next) => {
             if (product.userId.toString() !== req.user._id.toString()) {
                 return res.redirect('/');
             }
-            product.title = req.body.title;
-            product.price = req.body.price;
-            product.description = req.body.description;
-            product.image = req.body.image;
+            product.title = title;
+            product.imageUrl = image ? '/' + image.path : product.imageUrl;
+            product.price = price;
+            product.description = description;
             return product
                 .save()
                 .then(() => {

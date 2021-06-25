@@ -8,12 +8,16 @@
         <div class="alert alert-danger"><%= error.msg %></div>
     <% } %>
 <% } %>
+<% if (errorMessage) { %>
+    <div class="alert alert-danger"><%= errorMessage %></div>
+<% } %>
 
 <main>
     <form
             class="product-form"
             action="/admin/<%= editing ? 'edit' : 'add' %>-product"
             method="POST"
+            enctype="multipart/form-data"
     >
         <div class="form-control">
             <label for="title">Title</label>

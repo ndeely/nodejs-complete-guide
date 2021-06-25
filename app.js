@@ -10,6 +10,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash'); // for error/info messages to user
 require('dotenv').config();
+const multer = require('multer'); // for multipart form data (text and files)
 
 const errorController = require('./controllers/error.controller');
 const User = require('./models/user.model');
@@ -21,6 +22,26 @@ const store = new MongoDBStore({
 });
 const csrfProtection = csrf({});
 
+// for multer options
+const fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname + '-' + Date.now());
+    }
+});
+const imageFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/png' ||
+        file.mimetype === 'image/jpg' ||
+        file.mimetype === 'image/jpeg'
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+};
+
 app.set('view engine', ejs.name);
 
 const adminRoutes = require('./routes/admin.routes');
@@ -28,7 +49,17 @@ const shopRoutes = require('./routes/shop.routes');
 const authRoutes = require('./routes/auth.routes');
 
 app.use(bodyParser.urlencoded({extended: false}));
+
+// initialise multer with options
+app.use(multer({
+    storage: fileStorage,
+    fileFilter: imageFilter
+}).single('image'));
+
+//statically served folders
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
@@ -69,11 +100,12 @@ app.use(errorController.error404); // catch remaining routes
 
 // catch all errors thrown
 app.use((error, req, res, next) => {
-    res.status(404).render(
+    res.status(500).render(
         '500',
         {
             pageTitle: '500 - Error',
-            path: '/500'
+            path: '/500',
+            isAuthenticated: req.session.isLoggedIn
         }
     );
 });

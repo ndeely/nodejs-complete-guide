@@ -6,10 +6,13 @@ ul#orders {
     max-width: 90%;
 }
 
+ul.order-item {
+    border: 3px solid green;
+    padding: 5px;
+    list-style-type: none;
+}
+
 .order {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     padding: 1rem;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.26);
     margin-bottom: 1rem;
