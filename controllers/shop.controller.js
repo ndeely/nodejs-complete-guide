@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const pdfkit = require('pdfkit');
+
 const Product = require('../models/product.model');
 const Order = require('../models/order.model');
 
@@ -151,10 +153,20 @@ exports.getInvoice = (req, res, next) => {
             //     res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
             //     res.send(data);
             // });
-            const file = fs.createReadStream(invoicePath);
+            // const file = fs.createReadStream(invoicePath);
+            // res.setHeader('Content-Type', 'application/pdf');
+            // res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+            // file.pipe(res);
+            const pdfDoc = new pdfkit();
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
-            file.pipe(res);
+            pdfDoc.pipe(fs.createWriteStream(invoicePath));
+            pdfDoc.pipe(res);
+
+            pdfDoc.text('Test');
+
+            pdfDoc.end();
+
         })
         .catch(err => { next(err); });
 };
