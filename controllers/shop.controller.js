@@ -121,7 +121,6 @@ exports.postOrder = (req, res, next) => {
 exports.getOrders = (req, res, next) => {
     Order.find( { 'user.userId': req.user._id })
         .then(orders => {
-            console.log(orders);
             res.render(
                 'shop/orders',
                 {
@@ -136,12 +135,26 @@ exports.getOrders = (req, res, next) => {
 
 exports.getInvoice = (req, res, next) => {
     const orderId = req.params.orderId;
-    const invoiceName = 'Invoice-' + orderId + '.pdf';
-    const invoicePath = path.join('/data', 'invoices', invoiceName);
-    fs.readFile(invoicePath, (err, data) => {
-        if (err) { return next(err); }
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
-        res.send(data);
-    });
+    Order.findById(orderId)
+        .then(order => {
+            if (!order) {
+                return next(new Error('No order found'));
+            }
+            if (order.user.userId.toString() !== req.user._id.toString()) {
+                return next(new Error('You do not have permission to view this document'));
+            }
+            const invoiceName = 'Invoice-' + orderId + '.pdf';
+            const invoicePath = path.join('data', 'invoices', invoiceName);
+            // fs.readFile(invoicePath, (err, data) => {
+            //     if (err) { return next(err); }
+            //     res.setHeader('Content-Type', 'application/pdf');
+            //     res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+            //     res.send(data);
+            // });
+            const file = fs.createReadStream(invoicePath);
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+            file.pipe(res);
+        })
+        .catch(err => { next(err); });
 };

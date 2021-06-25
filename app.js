@@ -100,6 +100,7 @@ app.use(errorController.error404); // catch remaining routes
 
 // catch all errors thrown
 app.use((error, req, res, next) => {
+    // console.log(error);
     res.status(500).render(
         '500',
         {
