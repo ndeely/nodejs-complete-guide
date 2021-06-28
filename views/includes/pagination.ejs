@@ -1,0 +1,15 @@
+<section class="pagination centered">
+    <% if (hasPrevPage) { %>
+        <% if (prevPage !== 1) { %>
+            <a href="?page=1">1</a>
+        <% } %>
+        <a href="?page=<%= prevPage %>"><%= prevPage %></a>
+    <% } %>
+    <a class="active" href="?page=<%= currentPage %>"><%= currentPage %></a>
+    <% if (hasNextPage) { %>
+        <a href="?page=<%= nextPage %>"><%= nextPage %></a>
+        <% if (nextPage !== lastPage) { %>
+            <a href="?page=<%= lastPage %>"><%= lastPage %></a>
+        <% } %>
+    <% } %>
+</section>

@@ -6,14 +6,33 @@ const pdfkit = require('pdfkit');
 const Product = require('../models/product.model');
 const Order = require('../models/order.model');
 
+const ITEMS_PER_PAGE = 2;
+
 exports.getHomepage = (req, res, next) => {
+    const page = +req.query.page || 1;
+    let itemCount;
+
     Product.find()
+        .countDocuments()
+        .then(numProducts => {
+            itemCount = numProducts;
+            return Product.find()
+                .skip((page - 1) * ITEMS_PER_PAGE)
+                .limit(ITEMS_PER_PAGE);
+        })
         .then(products => {
             res.render(
                 'shop/index', {
                     prods: products,
                     pageTitle: 'Homepage',
-                    path: '/'
+                    path: '/',
+                    totalProducts: itemCount,
+                    currentPage: page,
+                    hasNextPage: ITEMS_PER_PAGE * page < itemCount,
+                    hasPrevPage: page > 1,
+                    nextPage: page + 1,
+                    prevPage: page - 1,
+                    lastPage: Math.ceil(itemCount / ITEMS_PER_PAGE)
                 }
             );
         })
@@ -25,13 +44,30 @@ exports.getHomepage = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
+    const page = +req.query.page || 1;
+    let itemCount;
+
     Product.find()
+        .countDocuments()
+        .then(numProducts => {
+            itemCount = numProducts;
+            return Product.find()
+                .skip((page - 1) * ITEMS_PER_PAGE)
+                .limit(ITEMS_PER_PAGE);
+        })
         .then(products => {
             res.render(
                 'shop/product-list', {
                     prods: products,
                     pageTitle: 'Shop',
-                    path: '/products'
+                    path: '/products',
+                    totalProducts: itemCount,
+                    currentPage: page,
+                    hasNextPage: ITEMS_PER_PAGE * page < itemCount,
+                    hasPrevPage: page > 1,
+                    nextPage: page + 1,
+                    prevPage: page - 1,
+                    lastPage: Math.ceil(itemCount / ITEMS_PER_PAGE)
                 }
             );
         })
