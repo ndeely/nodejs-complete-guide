@@ -62,6 +62,7 @@ exports.postAddProduct = (req, res, next) => {
                     price: price,
                     description: description
                 },
+                errorMessage: null,
                 validationErrors: errors.array()
             }
         );
@@ -109,6 +110,7 @@ exports.getEditProduct = (req, res, next) => {
                         price: product.price,
                         description: product.description
                     },
+                    errorMessage: null,
                     validationErrors: []
                 }
             );
@@ -149,6 +151,7 @@ exports.postEditProduct = (req, res, next) => {
                             price: price,
                             description: description
                         },
+                        errorMessage: null,
                         validationErrors: errors.array()
                     }
                 );
