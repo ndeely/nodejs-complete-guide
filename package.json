@@ -2,10 +2,10 @@
   "name": "nodejs-complete-guide",
   "version": "1.0.0",
   "description": "First nodeJS project",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "supervisor app.js"
+    "start": "supervisor server"
   },
   "author": "Niall Deely",
   "license": "ISC",
