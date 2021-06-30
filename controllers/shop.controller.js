@@ -90,9 +90,11 @@ exports.getProduct = (req, res, next) => {
                 }
             );
         })
-        .catch(err => {
-            if (err) console.log(err);
-        });
+        .catch(err => { if (err) {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        } });
 };
 
 exports.getCart = (req, res, next) => {
@@ -106,7 +108,11 @@ exports.getCart = (req, res, next) => {
             products: user.cart.items
         });
     })
-    .catch(err => { if (err) console.log(err) });
+    .catch(err => { if (err) {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+    } });
 };
 
 exports.postCart = (req, res, next) => {
@@ -116,7 +122,11 @@ exports.postCart = (req, res, next) => {
             req.user.addToCart(product);
             res.redirect('/cart');
         })
-        .catch(err => { if (err) console.log(err) });
+        .catch(err => { if (err) {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        } });
 };
 
 exports.deleteCartItem = (req, res, next) => {
@@ -153,7 +163,11 @@ exports.postOrder = (req, res, next) => {
         .then(() => {
             res.redirect('/orders');
         })
-        .catch(err => { if (err) console.log(err) });
+        .catch(err => { if (err) {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        } });
 };
 
 exports.getOrders = (req, res, next) => {
@@ -168,7 +182,11 @@ exports.getOrders = (req, res, next) => {
                 }
             );
         })
-        .catch(err => { if (err) console.log(err) });
+        .catch(err => { if (err) {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        } });
 };
 
 exports.getInvoice = (req, res, next) => {
@@ -218,5 +236,37 @@ exports.getInvoice = (req, res, next) => {
             pdfDoc.end();
 
         })
-        .catch(err => { next(err); });
+        .catch(err => { if (err) {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        } });
+};
+
+exports.getCheckout = (req, res, next) => {
+    req.user
+        .populate('cart.items.productId')
+        .execPopulate()
+        .then(user => {
+            const products = user.cart.items;
+            let total = 0;
+            products.forEach(p => {
+                total += p.productId.price * p.quantity;
+            });
+            res.render(
+                'shop/checkout',
+                {
+                    pageTitle: 'Checkout',
+                    path: '/checkout',
+                    products: products,
+                    total: total
+                }
+            );
+        })
+        .catch(err => { if (err) {
+            console.log(err);
+            // const error = new Error(err);
+            // error.httpStatusCode = 500;
+            // return next(error);
+        } });
 };
