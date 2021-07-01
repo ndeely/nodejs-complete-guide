@@ -1,0 +1,53 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/cart.css">
+<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+<%- include('../includes/nav.ejs') %>
+
+<main>
+    <h1><%= pageTitle %></h1>
+    <ul id="cart">
+        <% products.forEach( p => { %>
+            <li class="cart-item">
+                <h1><%= p.productId.title %></h1>
+                <h2>Quantity: <%= p.quantity %></h2>
+            </li>
+        <% }); %>
+    </ul>
+    <div class="centered">
+        <h2>Total: €<%= total %></h2>
+    </div>
+    <div class="centered">
+        <button class="btn" type="button" id="checkout-button">Checkout</button>
+    </div>
+</main>
+
+<%- include('../includes/end.ejs') %>
+
+<script type="text/javascript">
+    var stripe = Stripe("pk_test_51Hrp5MBhWCnlJeK62YxEYr8PeVemCHTFdgqYwSTkDhIjNqe5CQtnLOHUQvMCj0rxQXQzbhBGUlZGaYd5lHOOlEQy00QxNnNMLc");
+    var checkoutButton = document.getElementById("checkout-button");
+
+    checkoutButton.addEventListener("click", function () {
+        fetch("/checkout", {
+            method: "POST",
+            headers: { 'X-CSRF-TOKEN': '<%= csrfToken %>' }
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (session) {
+                return stripe.redirectToCheckout({ sessionId: session.id });
+            })
+            .then(function (result) {
+                // If redirectToCheckout fails due to a browser or network
+                // error, you should display the localized error message to your
+                // customer using error.message.
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+    });
+</script>

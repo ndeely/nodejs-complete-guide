@@ -242,31 +242,3 @@ exports.getInvoice = (req, res, next) => {
             return next(error);
         } });
 };
-
-exports.getCheckout = (req, res, next) => {
-    req.user
-        .populate('cart.items.productId')
-        .execPopulate()
-        .then(user => {
-            const products = user.cart.items;
-            let total = 0;
-            products.forEach(p => {
-                total += p.productId.price * p.quantity;
-            });
-            res.render(
-                'shop/checkout',
-                {
-                    pageTitle: 'Checkout',
-                    path: '/checkout',
-                    products: products,
-                    total: total
-                }
-            );
-        })
-        .catch(err => { if (err) {
-            console.log(err);
-            // const error = new Error(err);
-            // error.httpStatusCode = 500;
-            // return next(error);
-        } });
-};

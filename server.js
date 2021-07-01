@@ -47,6 +47,7 @@ app.set('view engine', ejs.name);
 const adminRoutes = require('./routes/admin.routes');
 const shopRoutes = require('./routes/shop.routes');
 const authRoutes = require('./routes/auth.routes');
+const paymentRoutes = require('./routes/payment.routes');
 
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -94,6 +95,7 @@ app.use((req, res, next) => {
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
+app.use(paymentRoutes);
 app.get('/500', errorController.error500);
 
 app.use(errorController.error404); // catch remaining routes

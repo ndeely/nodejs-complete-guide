@@ -67,7 +67,7 @@ exports.postAddProduct = (req, res, next) => {
             }
         );
     }
-    const imageUrl = '/' + image.path;
+    const imageUrl = '/' + image.path.replace(/\\/g, "/");
     const product = new Product({
         title: title,
         imageUrl: imageUrl,
@@ -171,7 +171,7 @@ exports.postEditProduct = (req, res, next) => {
             product.title = title;
             if (image) {
                 fileHelper.deleteFile(product.imageUrl);
-                product.imageUrl = image.path;
+                product.imageUrl = image.path.replace(/\\/g, "/");
             }
             product.price = price;
             product.description = description;
