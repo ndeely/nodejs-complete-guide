@@ -27,18 +27,18 @@
     var stripe = Stripe("pk_test_51Hrp5MBhWCnlJeK62YxEYr8PeVemCHTFdgqYwSTkDhIjNqe5CQtnLOHUQvMCj0rxQXQzbhBGUlZGaYd5lHOOlEQy00QxNnNMLc");
     var checkoutButton = document.getElementById("checkout-button");
 
-    checkoutButton.addEventListener("click", function () {
+    checkoutButton.addEventListener("click", () => {
         fetch("/checkout", {
             method: "POST",
             headers: { 'X-CSRF-TOKEN': '<%= csrfToken %>' }
         })
-            .then(function (response) {
+            .then(response => {
                 return response.json();
             })
-            .then(function (session) {
+            .then(session => {
                 return stripe.redirectToCheckout({ sessionId: session.id });
             })
-            .then(function (result) {
+            .then(result => {
                 // If redirectToCheckout fails due to a browser or network
                 // error, you should display the localized error message to your
                 // customer using error.message.
@@ -46,7 +46,7 @@
                     alert(result.error.message);
                 }
             })
-            .catch(function (error) {
+            .catch(error => {
                 console.error("Error:", error);
             });
     });

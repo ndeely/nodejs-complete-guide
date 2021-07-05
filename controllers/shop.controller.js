@@ -231,7 +231,7 @@ exports.getInvoice = (req, res, next) => {
             });
 
             pdfDoc.fontSize(26).text('--------------------------');
-            pdfDoc.fontSize(18).text('Total: €' + totalPrice);
+            pdfDoc.fontSize(18).text('Total: €' + totalPrice.toFixed(2));
 
             pdfDoc.end();
 

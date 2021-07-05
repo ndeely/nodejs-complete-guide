@@ -16,11 +16,11 @@ const errorController = require('./controllers/error.controller');
 const User = require('./models/user.model');
 
 const app = express();
+
 const store = new MongoDBStore({
     uri: process.env.MONGODB_URI,
     collection: 'sessions'
 });
-const csrfProtection = csrf({});
 
 // for multer options
 const fileStorage = multer.diskStorage({
@@ -43,6 +43,8 @@ const imageFilter = (req, file, cb) => {
 };
 
 app.set('view engine', ejs.name);
+
+const csrfProtection = csrf({});
 
 const adminRoutes = require('./routes/admin.routes');
 const shopRoutes = require('./routes/shop.routes');

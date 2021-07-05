@@ -1,4 +1,5 @@
 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
+const Order = require('../models/order.model');
 
 exports.getCheckout = (req, res, next) => {
     req.user
@@ -16,15 +17,14 @@ exports.getCheckout = (req, res, next) => {
                     pageTitle: 'Checkout',
                     path: '/checkout',
                     products: products,
-                    total: total
+                    total: total.toFixed(2)
                 }
             );
         })
         .catch(err => { if (err) {
-            console.log(err);
-            // const error = new Error(err);
-            // error.httpStatusCode = 500;
-            // return next(error);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         } });
 };
 
@@ -37,13 +37,6 @@ exports.postCheckout = (req, res, next) => {
             const line_items = [];
 
             products.forEach(p => {
-                const price_data = {};
-                price_data['currency'] = 'eur';
-                price_data['product_data'] = {};
-                price_data['product_data']['name'] = p.title;
-                price_data['product_data']['images'] = [ process.env.MY_DOMAIN + p.imageUrl ];
-                price_data['unit_amount'] = p.productId.price * 100;
-
                 const line_item = {};
                 line_item['price_data'] = {};
                 line_item['price_data']['currency'] = 'eur';
@@ -55,7 +48,6 @@ exports.postCheckout = (req, res, next) => {
 
                 line_items.push(line_item);
             });
-            console.log(line_items);
             return line_items;
         })
         .then(line_items => {
@@ -66,22 +58,51 @@ exports.postCheckout = (req, res, next) => {
                 success_url: process.env.MY_DOMAIN + `/checkout/success`,
                 cancel_url: process.env.MY_DOMAIN + `/checkout/cancelled`,
             })
-                .then(session => {
-                    res.json({id: session.id});
-                })
-                .catch(err => { if (err) console.log(err); });
+            .then(session => {
+                res.json({id: session.id});
+            })
+            .catch(err => { if (err) console.log(err); });
         })
         .catch(err => { if (err) console.log(err) });
 };
 
 exports.getCheckoutSuccess = (req, res, next) => {
-    res.render(
-        'payment/success',
-        {
-            pageTitle: 'Order Complete',
-            path: '/checkout/success'
-        }
-    );
+    let currentDate = new Date();
+    const date = currentDate.getFullYear() + "/" + (currentDate.getMonth() + 1) + "/" + currentDate.getDate();
+    const time = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+
+    req.user
+        .populate('cart.items.productId')
+        .execPopulate()
+        .then(user => {
+            const products = user.cart.items.map(i => {
+                return {
+                    productData: { ...i.productId._doc },
+                    quantity: i.quantity
+                };
+            });
+            const order = new Order({
+                user: {
+                    email: req.user.email,
+                    userId: req.user._id
+                },
+                products: products,
+                date: date,
+                time: time
+            });
+            return order.save();
+        })
+        .then(() => {
+            return req.user.clearCart();
+        })
+        .then(() => {
+            res.redirect('/orders');
+        })
+        .catch(err => { if (err) {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        } });
 };
 
 exports.getCheckoutCancelled = (req, res, next) => {
